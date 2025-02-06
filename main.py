@@ -7,6 +7,7 @@ from cluster import (
         plot_multipanel)
 
 
+
 def main():
 
     # create tight clusters
@@ -29,7 +30,6 @@ def main():
     print(km.get_error())
     scores = Silhouette().score(clusters, pred)
     plot_multipanel(clusters, labels, pred, scores)
-    
 
 if __name__ == "__main__":
     main()

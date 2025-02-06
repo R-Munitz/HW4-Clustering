@@ -67,7 +67,6 @@ def test_kmeans_fit():
     #expected centers are ~mean of data points
     expected_centers = np.array([[1.5, 2.5], [8.5, 8.5]])
 
-def test_kmeans_predict():
 
     #check if expected centers match assigned centers
 
@@ -77,6 +76,8 @@ def test_kmeans_predict():
 
     #check if they are closely matched 
     assert (np.allclose(sorted_clusters, sorted_predicted_clusters, atol = 0.5))
+
+def test_kmeans_predict():
 
     #test if data points are correctly assigned with data containing two distinct clusters
     data = np.array([[0, 0], [1, 1], [9, 9], [10, 10]])
