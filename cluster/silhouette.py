@@ -27,9 +27,7 @@ class Silhouette:
         #math
         #s(i)= b(i)−a(i)/max(a(i),b(i))
         #a(i) = mean distance from point i to all other points in self cluster - intra cluster distance
-        #b(i) = mean distance from point i to all points in nearest ( non self) cluster  - nearest cluster distance
-
-        #make sure fit/predict was called first?
+        #b(i) = mean distance from point i to all points in nearest (non self) cluster  - nearest cluster distance
 
         #initialize array of scores
         silhouette_scores = np.zeros(X.shape[0])

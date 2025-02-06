@@ -9,7 +9,6 @@ import pytest
 import numpy as np
 
 def test_kmeans_init():
-
     #test edge cases
 
     #test value error is raised if k is not an integer
@@ -37,7 +36,6 @@ def test_kmeans_init():
         km = KMeans(k=1, max_iter=0)
 
 def test_kmeans_fit():
-
     #test edge cases
 
     #test that mat is not empty

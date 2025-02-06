@@ -21,28 +21,29 @@ class KMeans:
                 the maximum number of iterations before quitting model fit
         """
         #error handling
-        #k must be an integer >0
+
+        #k must be an integer > 0
         if not isinstance(k, int):
             raise ValueError("k must be an integer")
         if k <= 0:
             raise ValueError("k must be greater than 0")
         
-        #tol must be a float >0
+        #tol must be a float > 0
         if not isinstance(tol, float):
-            raise ValueError("tol must be a float")
+            raise ValueError("tolerance must be a float")
         if tol <= 0:
-            raise ValueError("tol must be greater than 0")
+            raise ValueError("tolerance must be greater than 0")
         
-        #max_iter must be an integer >0
+        #max_iter must be an integer > 0
         if not isinstance(max_iter, int):
-            raise ValueError("max_iter must be an integer")
+            raise ValueError("max iterations must be an integer")
         if max_iter <= 0:
-            raise ValueError("max_iter must be greater than 0")
+            raise ValueError("max iterations must be greater than 0")
         
         self.k = k # number of clusters desired
         self.tol = tol # tolerance for stopping criterion (when to stop iterating)
-        self.max_iter = max_iter # maximum number of iterations to run before quitting 
-        #check iter within a reasonable range?
+        self.max_iter = max_iter # maximum number of iterations to run before stopping
+
         self.cluster_centers = None
         self.dataset = None
         self.cluster_assignments = None
@@ -81,13 +82,14 @@ class KMeans:
         #mat must not be an empty matrix
         if mat.size == 0:
             raise ValueError("mat must not be an empty matrix")
+        
         #mat must be a 2D numpy array
         if not isinstance(mat, np.ndarray):
             raise ValueError("mat must be a 2D numpy array")
         if mat.ndim != 2:
             raise ValueError("mat must be a 2D numpy array")
      
-        #k must be < the number of data points - move to fit()
+        #k must be < the number of data points 
         if self.k >= mat.shape[0]:
             raise ValueError("k must be less than the number of data points")
         
@@ -108,10 +110,6 @@ class KMeans:
 
             #assign each data point to the nearest cluster, and store the cluster assignments 
             self.cluster_assignments = np.argmin(distances, axis=1)
-
-            #cluster_assignments = np.array([np.argmin([self.calculate_Euclidean_distance(datapoint, center)     
-                                                    #for center in self.cluster_centers])
-                                                       # for datapoint in mat])
             
             #calculate new cluster centroid based on mean of all points assigned to cluster
             updated_cluster_centers = np.array([ mat[self.cluster_assignments == i].mean(axis=0) if np.any(self.cluster_assignments == i)  
@@ -124,23 +122,7 @@ class KMeans:
                 break
             else: #update centers
                 self.cluster_centers = updated_cluster_centers
-        
-        
-    '''
-    def calculate_Euclidean_distance(self, data_point: np.ndarray, cluster_center: np.ndarray) -> float: #rename to private func? Use scipy cdist instead
-        """
-        Calculates the Euclidean distance between a data point and a cluster center.
 
-        inputs:
-            data_point: np.ndarray
-                A 1D array representing a data point
-            cluster_center: np.ndarray
-                A 1D array representing a cluster center
-        """
-        #calculate the Euclidean distance between a data point and a cluster center
-        distance = np.sqrt(np.sum((data_point - cluster_center)**2)) #euclidean distance formula
-        return distance
-    '''    
 
     def predict(self, mat: np.ndarray) -> np.ndarray:
         """
@@ -160,27 +142,23 @@ class KMeans:
         """
         #assigning cluster labels to each data point based on distance to cluster centers
 
-        #psuedocode
-        #check for errors ( empty matrix, uninitialized cluster centers, mismatched features, non-numeric values etc) 
-       
+        #psuedocode   
         #for each data point in the matrix:
             #calculate distance to each cluster centroid
             #find closest cluster
             #store predicted cluster label
         #return 1D array of cluster labels
 
+        #error handling
 
         if self.cluster_centers is None:
-            raise ValueError("Model was not fitted yet!")
+            raise ValueError("Model was not fitted yet, call the fit method first.")
 
-        #predict labels for new data points
-        #cluster_labels = np.array([np.argmin([self.calculate_Euclidean_distance(datapoint, center)     
-                                                    #for center in self.cluster_centers])
-                                                        #for datapoint in mat])
+    
         #calculate distances 
         distances = cdist(mat, self.cluster_centers, metric='euclidean')
 
-        #assign label to data point
+        #assign label to data point based on closest cluster
         cluster_labels = np.argmin(distances, axis=1)
         
         return cluster_labels
@@ -195,21 +173,16 @@ class KMeans:
             float
                 the squared-mean error of the fit model
         """
+        #calculate error (sqrd Euclidean distance between each datapoint and assigned cluster, sum, divide by nr of points = mean squared error)
+        
+        #error handling
+
         if self.cluster_centers is None or self.cluster_assignments is None:
             raise ValueError("Model was not fitted yet! Call the fit method first.")
         
-        #calculate error (sqrd Euclidean distance between each datapoint and assigned cluster, sum, divide by nr of points = mean squared error)
-        """
-        total_squared_error = sum(
-              self.calculate_Euclidean_distance(datapoint, self.cluster_centers[self.cluster_assignments[i]]) ** 2
-                                        for i, datapoint in enumerate(self.dataset)
-        )
-        """
-        #won't work, use cdist instead of method no longer instantiated, need to calc distance between datapoints and assigned cluster?
-        distances = cdist(self.dataset, self.cluster_centers, metric='euclidean') #for each data point in mat, calculate distance to cluster centers
-
-        # get the cluster assignments - not stored, so calculate min distance to cluster center
-        #cluster_assignments = np.argmin(distances, axis=1)
+    
+        #for each data point in mat, calculate distance to cluster centers
+        distances = cdist(self.dataset, self.cluster_centers, metric='euclidean') 
 
         #get minimum distances (distance to assigned cluster)
         min_distances = distances [np.arange(self.dataset.shape[0]), self.cluster_assignments]
@@ -217,12 +190,10 @@ class KMeans:
         #calculate squared mean error
         squared_mean_error = np.mean(min_distances ** 2)
 
-
-        #mean_squared_error = total_squared_error / len(self.dataset)
-
         return squared_mean_error
                                     
-       
+
+# I don't use this function in my current implementation of the KMeans class   
     def get_centroids(self) -> np.ndarray:
         """
         Returns the centroid locations of the fit model.
