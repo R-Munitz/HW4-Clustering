@@ -1,5 +1,10 @@
 # Write your k-means unit tests here
-import KMeans
+from cluster import (
+        KMeans, 
+        Silhouette, 
+        make_clusters,
+        plot_clusters,
+        plot_multipanel)
 import pytest
 import numpy as np
 
