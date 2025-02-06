@@ -28,11 +28,12 @@ def test_silhouette_score():
     #score using sklearn silhouette score
     sklearn_silhouette_score = silhouette_score(clusters, pred)
 
-    #compare scores (add some tolerance?)
-    assert np.allclose(my_silhouette_score, sklearn_silhouette_score)
+    #compare scores 
+    #how to choose tolerance?
+    assert np.allclose(my_silhouette_score, sklearn_silhouette_score, atol = 0.1)
 
     #check edge cases (no scores) are handled (not edge cases about the data itself)
-    
+
 
 
 

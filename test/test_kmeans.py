@@ -55,6 +55,36 @@ def test_kmeans_fit():
         km = KMeans(k=100)
         km.fit(np.random.rand(10, 10))
 
-    #test 
+    #test on simple data clustering
+    data = np.array([
+        [1, 2], [1, 3], [2, 2], [2, 3],  # cluster 1
+        [8, 8], [9, 9], [8, 9], [9, 8]   # cluster 2
+    ])
+    
+    km = KMeans(k=2)
+    km.fit(data)
+
+    #expected centers are ~mean of data points
+    expected_centers = np.array([[1.5, 2.5], [8.5, 8.5]])
+
+def test_kmeans_predict():
+
+    #check if expected centers match assigned centers
+
+    #sort ( to match correct centers)
+    sorted_clusters = np.sort(km.cluster_centers, axis = 0)
+    sorted_predicted_clusters = np.sort(expected_centers, axis = 0)
+
+    #check if they are closely matched 
+    assert (np.allclose(sorted_clusters, sorted_predicted_clusters, atol = 0.5))
+
+    #test if data points are correctly assigned with data containing two distinct clusters
+    data = np.array([[0, 0], [1, 1], [9, 9], [10, 10]])
+    km = KMeans(k=2)
+    km.fit(data)
+    predictions = km.predict(data)
+    assert len(set(predictions)) == 2
+
+
 
 
