@@ -24,7 +24,10 @@ class Silhouette:
             np.ndarray
                 a 1D array with the silhouette scores for each of the observations in `X`
         """
-        #math
+        #error handling
+        self.check_input(X,y)
+        
+        #silhhpuette score formula
         #s(i)= b(i)−a(i)/max(a(i),b(i))
         #a(i) = mean distance from point i to all other points in self cluster - intra cluster distance
         #b(i) = mean distance from point i to all points in nearest (non self) cluster  - nearest cluster distance
@@ -68,6 +71,28 @@ class Silhouette:
             silhouette_scores[i] = (b_i - a_i) / max(a_i, b_i) if max(a_i, b_i) > 0 else 0
 
         return silhouette_scores
+    
+    def check_input(X,y):
+        
+        #error handling
+        #X must be a 2D numpy array
+        if not isinstance(X, np.ndarray):
+            raise ValueError("X must be a 2D numpy array")
+        if X.ndim != 2:
+            raise ValueError("X must be a 2D numpy array")
+        
+        #y must be a 1D numpy array
+        if not isinstance(y, np.ndarray):
+            raise ValueError("y must be a 1D numpy array")
+        if y.ndim != 1:
+            raise ValueError("y must be a 1D numpy array")
+        
+        #X and y must have the same number of observations
+        if X.shape[0] != y.shape[0]:
+            raise ValueError("X and y must have the same number of observations")
+        
+        pass
+
 
 
 

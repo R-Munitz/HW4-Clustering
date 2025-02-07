@@ -21,25 +21,8 @@ class KMeans:
                 the maximum number of iterations before quitting model fit
         """
         #error handling
+        self.check_init_inputs(k, tol, max_iter)
 
-        #k must be an integer > 0
-        if not isinstance(k, int):
-            raise ValueError("k must be an integer")
-        if k <= 0:
-            raise ValueError("k must be greater than 0")
-        
-        #tol must be a float > 0
-        if not isinstance(tol, float):
-            raise ValueError("tolerance must be a float")
-        if tol <= 0:
-            raise ValueError("tolerance must be greater than 0")
-        
-        #max_iter must be an integer > 0
-        if not isinstance(max_iter, int):
-            raise ValueError("max iterations must be an integer")
-        if max_iter <= 0:
-            raise ValueError("max iterations must be greater than 0")
-        
         self.k = k # number of clusters desired
         self.tol = tol # tolerance for stopping criterion (when to stop iterating)
         self.max_iter = max_iter # maximum number of iterations to run before stopping
@@ -78,6 +61,7 @@ class KMeans:
                 #else, update new cluster center
 
         #error handling
+        self.check_fit_inputs(mat)
         
         #mat must not be an empty matrix
         if mat.size == 0:
@@ -105,6 +89,8 @@ class KMeans:
         #until convergence or max_iterations 
         for _ in range(self.max_iter):
 
+            
+            #abstract this to get_centroids func? (next two bits)
             #for every data point in matrix, calculate distances to cluster centers
             distances = cdist(mat, self.cluster_centers, metric='euclidean')
 
@@ -150,11 +136,12 @@ class KMeans:
         #return 1D array of cluster labels
 
         #error handling
+        self.check_predict_inputs()
 
+        #model must be fitted before predicting
         if self.cluster_centers is None:
             raise ValueError("Model was not fitted yet, call the fit method first.")
 
-    
         #calculate distances 
         distances = cdist(mat, self.cluster_centers, metric='euclidean')
 
@@ -173,13 +160,12 @@ class KMeans:
             float
                 the squared-mean error of the fit model
         """
-        #calculate error (sqrd Euclidean distance between each datapoint and assigned cluster, sum, divide by nr of points = mean squared error)
+        #calculate error (sqrd Euclidean distance between each datapoint and assigned cluster, sum, divide by nr of points = squared mean error)
         
         #error handling
-
+        #model must be fitted before calculating error
         if self.cluster_centers is None or self.cluster_assignments is None:
             raise ValueError("Model was not fitted yet! Call the fit method first.")
-        
     
         #for each data point in mat, calculate distance to cluster centers
         distances = cdist(self.dataset, self.cluster_centers, metric='euclidean') 
@@ -203,3 +189,58 @@ class KMeans:
                 a `k x m` 2D matrix representing the cluster centroids of the fit model
         """
         return self.cluster_centers
+    
+    def check_init_inputs(k,tol,max_iter):
+
+        #k must be an integer > 0
+        if not isinstance(k, int):
+            raise ValueError("k must be an integer")
+        if k <= 0:
+            raise ValueError("k must be greater than 0")
+        
+        #tol must be a float > 0
+        if not isinstance(tol, float):
+            raise ValueError("tolerance must be a float")
+        if tol <= 0:
+            raise ValueError("tolerance must be greater than 0")
+        
+        #max_iter must be an integer > 0
+        if not isinstance(max_iter, int):
+            raise ValueError("max iterations must be an integer")
+        if max_iter <= 0:
+            raise ValueError("max iterations must be greater than 0")
+        pass
+
+    def check_fit_inputs(self,mat):
+
+        #k must be an integer > 0
+        if not isinstance(k, int):
+            raise ValueError("k must be an integer")
+        if self.k <= 0:
+            raise ValueError("k must be greater than 0")
+        
+        #tol must be a float > 0
+        if not isinstance(self.tol, float):
+            raise ValueError("tolerance must be a float")
+        if self.tol <= 0:
+            raise ValueError("tolerance must be greater than 0")
+        
+        #max_iter must be an integer > 0
+        if not isinstance(self.max_iter, int):
+            raise ValueError("max iterations must be an integer")
+        if self.max_iter <= 0:
+            raise ValueError("max iterations must be greater than 0")
+    
+    def check_predict_inputs(self,mat):
+        #mat must be a 2D numpy array
+        if not isinstance(mat, np.ndarray):
+            raise ValueError("mat must be a 2D numpy array")
+        if mat.ndim != 2:
+            raise ValueError("mat must be a 2D numpy array")
+        
+        #mat must have the same number of features as the data that the clusters were fit on
+        if mat.shape[1] != self.dataset.shape[1]:
+            raise ValueError("Your data must have the same number of features as the data kmeans was fit on")
+        
+
+        
