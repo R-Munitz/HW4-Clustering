@@ -72,8 +72,8 @@ class Silhouette:
 
         return silhouette_scores
     
-    def check_input(X,y):
-        
+    def check_input(self,X,y):
+
         #error handling
         #X must be a 2D numpy array
         if not isinstance(X, np.ndarray):
