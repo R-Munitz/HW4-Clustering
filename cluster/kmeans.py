@@ -190,7 +190,7 @@ class KMeans:
         """
         return self.cluster_centers
     
-    def check_init_inputs(k,tol,max_iter):
+    def check_init_inputs(self, k,tol,max_iter):
 
         #k must be an integer > 0
         if not isinstance(k, int):
