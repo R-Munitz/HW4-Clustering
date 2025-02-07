@@ -122,7 +122,7 @@ class KMeans:
         #return 1D array of cluster labels
 
         #error handling
-        self.check_predict_inputs()
+        self.check_predict_inputs(mat)
 
         #model must be fitted before predicting
         if self.cluster_centers is None:
