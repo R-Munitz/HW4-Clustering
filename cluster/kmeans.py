@@ -63,20 +63,6 @@ class KMeans:
         #error handling
         self.check_fit_inputs(mat)
         
-        #mat must not be an empty matrix
-        if mat.size == 0:
-            raise ValueError("mat must not be an empty matrix")
-        
-        #mat must be a 2D numpy array
-        if not isinstance(mat, np.ndarray):
-            raise ValueError("mat must be a 2D numpy array")
-        if mat.ndim != 2:
-            raise ValueError("mat must be a 2D numpy array")
-     
-        #k must be < the number of data points 
-        if self.k >= mat.shape[0]:
-            raise ValueError("k must be less than the number of data points")
-        
         self.dataset = mat
 
         #set seed for reproducibility
@@ -190,7 +176,7 @@ class KMeans:
         """
         return self.cluster_centers
     
-    def check_init_inputs(self, k,tol,max_iter):
+    def check_init_inputs(self,k,tol,max_iter):
 
         #k must be an integer > 0
         if not isinstance(k, int):
@@ -211,25 +197,21 @@ class KMeans:
             raise ValueError("max iterations must be greater than 0")
         pass
 
-    def check_fit_inputs(self,mat):
+    def check_fit_inputs(self, mat):
 
-        #k must be an integer > 0
-        if not isinstance(k, int):
-            raise ValueError("k must be an integer")
-        if self.k <= 0:
-            raise ValueError("k must be greater than 0")
+        #mat must not be an empty matrix
+        if mat.size == 0:
+            raise ValueError("mat must not be an empty matrix")
         
-        #tol must be a float > 0
-        if not isinstance(self.tol, float):
-            raise ValueError("tolerance must be a float")
-        if self.tol <= 0:
-            raise ValueError("tolerance must be greater than 0")
-        
-        #max_iter must be an integer > 0
-        if not isinstance(self.max_iter, int):
-            raise ValueError("max iterations must be an integer")
-        if self.max_iter <= 0:
-            raise ValueError("max iterations must be greater than 0")
+        #mat must be a 2D numpy array
+        if not isinstance(mat, np.ndarray):
+            raise ValueError("mat must be a 2D numpy array")
+        if mat.ndim != 2:
+            raise ValueError("mat must be a 2D numpy array")
+     
+        #k must be < the number of data points 
+        if self.k >= mat.shape[0]:
+            raise ValueError("k must be less than the number of data points")
     
     def check_predict_inputs(self,mat):
         #mat must be a 2D numpy array
